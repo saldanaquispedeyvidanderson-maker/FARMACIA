@@ -51,6 +51,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ route('sales.show', $sale->id) }}">Ver detalle</a></li>
+                                    @if(auth()->user()->hasRole('Administrador'))
                                     <li>
                                         <form action="{{ route('sales.destroy', $sale->id) }}" method="POST" onsubmit="return confirm('¿Anular esta venta? El stock de los medicamentos será devuelto.');">
                                             @csrf
@@ -58,6 +59,7 @@
                                             <button type="submit" class="dropdown-item text-danger">Anular venta</button>
                                         </form>
                                     </li>
+                                    @endif
                                 </ul>
                             </div>
                         </td>
