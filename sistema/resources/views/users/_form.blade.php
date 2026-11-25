@@ -35,7 +35,7 @@
     <label for="phone" class="form-label">Teléfono</label>
     <input type="text" name="phone" id="phone"
         class="form-control @error('phone') is-invalid @enderror"
-        value="{{ old('phone', $user->phone ?? '') }}" maxlength="15">
+        value="{{ old('phone', $user->phone ?? '') }}" maxlength="9">
     @error('phone')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror

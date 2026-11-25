@@ -64,7 +64,7 @@
     </div>
     <div class="col-6 col-lg-3 mb-3">
         <div class="card border-0 shadow-sm h-100"><div class="card-body">
-            <div class="small text-muted text-uppercase">Ticket promedio</div>
+            <div class="small text-muted text-uppercase">Ticket total</div>
             <div class="fs-4 fw-bold">S/ {{ number_format($summary['average'], 2) }}</div>
         </div></div>
     </div>
