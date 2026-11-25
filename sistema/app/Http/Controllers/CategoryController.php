@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -12,7 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('settings.categories.index');
+        $categories = Category::all();
+        return view('settings.categories.index', compact('categories'));
     }
 
     /**
@@ -20,7 +23,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-         return view('settings.categories.create');
+        return view('settings.categories.create');
     }
 
     /**
@@ -28,7 +31,14 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|max:50|unique:categories',
+            'description' => 'nullable|max:255',
+        ]);
+
+        Category::create($validated);
+
+        return to_route('categories.index')->with('ok', 'Categoria registrada correctamente.');
     }
 
     /**
@@ -44,7 +54,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('settings.categories.edit', compact('category'));
     }
 
     /**
@@ -52,7 +62,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'max:50',
+                Rule::unique('categories', 'name')->ignore($category->id),
+            ],
+            'description' => 'nullable|max:255',
+        ]);
+
+        $category->update($validated);
+
+        return to_route('categories.index')->with('ok', 'Categoria actualizada correctamente');
     }
 
     /**
@@ -60,6 +81,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+        } catch (QueryException $e) {
+            return to_route('categories.index')->with('error', 'No se puede eliminar la categoría porque tiene medicamentos asignados.');
+        }
+
+        return to_route('categories.index')->with('ok', 'Categoria eliminada correctamente');
     }
 }
