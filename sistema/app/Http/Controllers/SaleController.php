@@ -13,7 +13,11 @@ class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::with(['customer', 'user'])->orderByDesc('date')->get();
+        $sales = Sale::with(['customer', 'user'])
+            ->when(auth()->user()->hasRole('Cajero'), fn ($query) => $query->where('user_id', auth()->id()))
+            ->orderByDesc('date')
+            ->get();
+
         return view('sales.index', compact('sales'));
     }
 
@@ -89,7 +93,10 @@ class SaleController extends Controller
 
     public function show(Sale $sale)
     {
+        abort_if(auth()->user()->hasRole('Cajero') && $sale->user_id !== auth()->id(), 403);
+
         $sale->load(['customer', 'user', 'details.medicine']);
+
         return view('sales.show', compact('sale'));
     }
 

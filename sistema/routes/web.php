@@ -24,16 +24,22 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    // Gestión
-    Route::resource('medicines', MedicineController::class)->except('show');
+    // Gestión de medicamentos y reportes para los roles autorizados.
+    Route::middleware('role:Administrador,Químico farmacéutico')->group(function () {
+        Route::resource('medicines', MedicineController::class)->except('show');
+        Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/export', [ReportController::class, 'export'])->name('reports.export');
+    });
+
+    // La administración del sistema queda reservada al Administrador.
+    Route::middleware('role:Administrador')->group(function () {
+        Route::resource('roles', RoleController::class)->except('show');
+        Route::resource('users', UserController::class)->except('show');
+        Route::resource('categories', CategoryController::class)->except('show');
+        Route::delete('sales/{sale}', [SaleController::class, 'destroy'])->name('sales.destroy');
+    });
+
+    // Clientes y operaciones de venta siguen disponibles para todo usuario autenticado.
     Route::resource('customers', CustomerController::class)->except('show');
-    Route::resource('sales', SaleController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
-
-    // Reportes
-    Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
-
-    // Configuraciones
-    Route::resource('roles', RoleController::class)->except('show');
-    Route::resource('users', UserController::class)->except('show');
-    Route::resource('categories', CategoryController::class)->except('show');
+    Route::resource('sales', SaleController::class)->only(['index', 'create', 'store', 'show']);
 });

@@ -124,3 +124,17 @@ body { background-color: #f4f6f8; }
 .login-input-group:focus-within .input-group-text,
 .login-input-group:focus-within .form-control { border-color: var(--bs-primary); }
 .login-input-group .form-control.is-invalid ~ .input-group-text { border-color: var(--bs-danger); }
+
+/* Centrar contenido de tablas en todo el sistema */
+.app-content .table th,
+.app-content .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Centrar todos los registros y encabezados de las tablas en el sistema */
+.app-content table th,
+.app-content table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}

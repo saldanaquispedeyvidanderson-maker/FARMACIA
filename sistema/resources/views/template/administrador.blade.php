@@ -24,12 +24,12 @@
 
 
     <main class="app-content flex-grow-1 overflow-y-auto p-3 p-lg-4">
-      <div class="container-fluid p-0">
+      <div class="container mx-auto" style="max-width: 1100px;">
         <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row gap-2 mb-4">
 
           <p class="text-secondary mb-0">@yield('description')</p>
 
-          <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="Ruta de navegación">
+          <nav style="--bs-breadcrumb-divider: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&quot;);" aria-label="Ruta de navegación">
             <ol class="breadcrumb mb-0 small">
               <li class="breadcrumb-item">
                   <span>@yield('item-breadcrumb')</span>
@@ -77,7 +77,7 @@
 <!-- MODAL — Confirmar Cierre de Sesión -->
 @include('partials.modal-logout')
 
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://jquery.com"></script>
 <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 @stack('scripts')
