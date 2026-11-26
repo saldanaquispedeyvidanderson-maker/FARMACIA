@@ -138,3 +138,158 @@ body { background-color: #f4f6f8; }
     text-align: center !important;
     vertical-align: middle !important;
 }
+
+/* =========================================================
+   FONDO DINÁMICO PREMIUM + EFECTO VIDRIO (GLASSMORPHISM)
+   ========================================================= */
+/* Mantener el menú lateral izquierdo siempre visible encima del fondo */
+#app-wrapper > aside,
+#app-wrapper > nav,
+.sidebar,
+#sidebar {
+    position: relative;
+    z-index: 1030 !important;
+}
+
+.main-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+   .app-content {
+    position: relative;
+    background: linear-gradient(
+        -45deg,
+        #f8fafc,
+        #fce7f3,
+        #e0f2fe,
+        #f3e8ff,
+        #f1f5f9
+    );
+    background-size: 400% 400%;
+    animation: auroraFlow 16s ease infinite;
+}
+
+@keyframes auroraFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* =========================================================
+   FONDO CON IMAGEN EN MOVIMIENTO SUAVE + EFECTO VIDRIO
+   ========================================================= */
+.app-content {
+    position: relative;
+    overflow-x: hidden;
+    background: transparent !important;
+    z-index: 1;
+}
+
+/* Capa de imagen animada detrás de todo el contenido */
+.app-content::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: 
+        linear-gradient(rgba(248, 250, 252, 0.82), rgba(253, 242, 248, 0.85)),
+        url('/images/fondo-farmacia.jpg') no-repeat center center;
+    background-size: cover;
+    animation: kenBurnsMove 28s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+@keyframes kenBurnsMove {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    50% {
+        transform: scale(1.08) translate(-1.5%, -1%);
+    }
+    100% {
+        transform: scale(1.12) translate(1.5%, 1%);
+    }
+}
+
+/* Tarjetas blancas con efecto vidrio translúcido */
+.app-content .card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.06) !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.app-content .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(233, 30, 99, 0.09) !important;
+}
+
+.app-content .card-header {
+    background: transparent !important;
+}
+
+/* =========================================================
+   FONDO CON IMAGEN EN MOVIMIENTO EN EL LOGIN
+   ========================================================= */
+.login-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: transparent !important;
+    z-index: 1;
+}
+
+.login-wrapper::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: 
+        linear-gradient(rgba(248, 250, 252, 0.80), rgba(253, 242, 248, 0.85)),
+        url('/images/fondo-farmacia.jpg') no-repeat center center;
+    background-size: cover;
+    animation: kenBurnsMove 28s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+/* Tarjeta del formulario de login con efecto vidrio */
+/* Tarjeta del formulario de login con efecto vidrio y bordes redondeados */
+.login-card,
+.login-wrapper .card {
+    background: rgba(255, 255, 255, 0.88) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 1.25rem !important;
+    padding: 2.25rem 2rem !important;
+    box-shadow: 0 16px 40px rgba(31, 38, 135, 0.1) !important;
+}
+/* =========================================================
+   MODO SOLEADO (CÁLIDO CON MENOS BRILLO / DESCANSO VISUAL)
+   ========================================================= */
+body.theme-sunny .app-content {
+    filter: brightness(0.93) sepia(0.14);
+}
+
+body.theme-sunny .app-content::before {
+    background: 
+        linear-gradient(rgba(235, 224, 202, 0.86), rgba(228, 212, 185, 0.90)),
+        url('/images/fondo-farmacia.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+body.theme-sunny .app-content .card {
+    background: rgba(246, 240, 228, 0.88) !important;
+    border: 1px solid rgba(217, 179, 110, 0.35) !important;
+    box-shadow: 0 8px 32px rgba(146, 110, 45, 0.08) !important;
+}
+

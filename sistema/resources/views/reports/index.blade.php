@@ -9,15 +9,6 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
-<style>
-    @media print {
-        #sidebar, .app-header, .no-print, .breadcrumb, .pagination { display: none !important; }
-        #app-wrapper, .main-wrapper, .app-content { height: auto !important; overflow: visible !important; }
-        .app-content { padding: 0 !important; }
-        .card { box-shadow: none !important; border: 1px solid #dee2e6 !important; break-inside: avoid; }
-        body { background: #fff !important; }
-    }
-</style>
 @endpush
 
 @php
@@ -39,11 +30,11 @@
     </div>
     <div class="d-flex flex-wrap gap-2 no-print">
         <a href="{{ route('reports.export', $exportFilters) }}" class="btn btn-outline-success btn-sm">
-            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar CSV para Excel
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Descargar Excel (.xlsx)
         </a>
-        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.print()">
-            <i class="bi bi-printer me-1"></i>Imprimir / Guardar PDF
-        </button>
+        <a href="{{ route('reports.pdf', $exportFilters) }}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-file-earmark-pdf me-1"></i>Descargar PDF
+        </a>
     </div>
 </div>
 

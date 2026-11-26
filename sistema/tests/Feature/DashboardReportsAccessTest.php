@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Tests\TestCase;
 
 class DashboardReportsAccessTest extends TestCase
@@ -50,24 +51,65 @@ class DashboardReportsAccessTest extends TestCase
         $this->get(route('reports.index', ['type' => 'sales']))->assertForbidden();
         $this->get(route('reports.index', ['type' => 'sellers']))->assertForbidden();
         $this->get(route('reports.export', ['type' => 'sales']))->assertForbidden();
+        $this->get(route('reports.pdf', ['type' => 'sales']))->assertForbidden();
+        $this->get(route('reports.pdf', ['type' => 'medicines']))->assertOk()->assertDownload();
         $this->get(route('users.index'))->assertForbidden();
         $this->get(route('medicines.index'))->assertOk();
     }
 
-    public function test_administrator_can_view_sales_reports_and_export_csv(): void
+    public function test_administrator_can_download_filtered_xlsx_and_pdf_reports(): void
     {
         $administrator = $this->userWithRole('Administrador');
-        $customer = Customer::create(['name' => 'Cliente de prueba', 'dni' => '87654321']);
-        $this->sale($administrator, $customer, 40);
+        $administrator->update(['name' => 'Andrés Huamán']);
+        $customer = Customer::create(['name' => 'Abigail Ybarra Gamez', 'dni' => '87654321']);
+        $otherCustomer = Customer::create(['name' => 'Cliente fuera del filtro', 'dni' => '23456789']);
+        $matchingSale = $this->sale($administrator, $customer, 40);
+        $matchingSale->update(['date' => now()->subDays(3)]);
+        $excludedSale = $this->sale($administrator, $otherCustomer, 90);
+        $excludedSale->update(['date' => now()->subDays(3)]);
+        $filters = [
+            'type' => 'sales',
+            'period' => 'custom',
+            'from' => now()->subDays(5)->toDateString(),
+            'to' => now()->subDay()->toDateString(),
+            'user_id' => $administrator->id,
+            'customer_id' => $customer->id,
+        ];
 
         $this->actingAs($administrator)
-            ->get(route('reports.index', ['type' => 'sales']))
+            ->get(route('reports.index', $filters))
             ->assertOk()
-            ->assertSee('Ingresos acumulados');
+            ->assertSee('Ingresos acumulados')
+            ->assertSee('#'.$matchingSale->id)
+            ->assertDontSee('#'.$excludedSale->id);
 
-        $this->get(route('reports.export', ['type' => 'sales']))
+        $excelResponse = $this->get(route('reports.export', $filters))
             ->assertOk()
             ->assertDownload();
+        $excelContents = $excelResponse->streamedContent();
+        $this->assertStringStartsWith('PK', $excelContents);
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'farmacia-report-');
+
+        try {
+            file_put_contents($temporaryFile, $excelContents);
+            $workbook = IOFactory::load($temporaryFile);
+            $worksheet = $workbook->getActiveSheet();
+
+            $this->assertSame('#'.$matchingSale->id, $worksheet->getCell('A2')->getValue());
+            $this->assertSame('Abigail Ybarra Gamez', $worksheet->getCell('C2')->getValue());
+            $this->assertSame('Andrés Huamán', $worksheet->getCell('D2')->getValue());
+            $this->assertSame(2, $worksheet->getHighestDataRow());
+            $this->assertSame('A2', $worksheet->getFreezePane());
+            $workbook->disconnectWorksheets();
+        } finally {
+            unlink($temporaryFile);
+        }
+
+        $pdfResponse = $this->get(route('reports.pdf', $filters))
+            ->assertOk()
+            ->assertDownload();
+        $this->assertStringStartsWith('%PDF-', $pdfResponse->getContent());
 
         $this->get(route('reports.index', ['type' => 'sellers']))->assertOk();
     }
