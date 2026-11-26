@@ -9,7 +9,7 @@
   <link rel="manifest" href="{{ asset('manifest.json') }}">
   <link rel="apple-touch-icon" href="{{ asset('icons/icon-192x192.png') }}">
   <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/custom.css') }}?v={{ time()}}">
   @stack('styles')
 </head>
 

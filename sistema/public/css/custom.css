@@ -293,3 +293,127 @@ body.theme-sunny .app-content .card {
     box-shadow: 0 8px 32px rgba(146, 110, 45, 0.08) !important;
 }
 
+/* =========================================================
+   SISTEMA 100% RESPONSIVE PARA CELULARES
+   ========================================================= */
+@media (max-width: 991.98px) {
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    #app-wrapper {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow: visible !important;
+    }
+
+    .main-wrapper {
+        width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Menú lateral oculto por defecto y deslizable encima de todo */
+    #sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px !important;
+        min-width: 260px !important;
+        height: 100dvh !important;
+        z-index: 1050 !important;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease-in-out;
+    }
+
+    #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Fondo oscuro detrás del menú al abrirlo en celular */
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1045;
+        display: none;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    /* Contenido adaptado al ancho del teléfono */
+    .app-content {
+        padding: 1rem 0.75rem !important;
+        overflow-y: visible !important;
+    }
+
+    .app-content > .container {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    /* Tarjetas y formularios apilados cómodamente */
+    .app-content .card-body {
+        padding: 1rem !important;
+        overflow-x: auto;
+    }
+
+    /* Tablas con deslizamiento horizontal táctil */
+    .app-content table {
+        min-width: 600px;
+        font-size: 0.85rem;
+    }
+
+    /* Botones y filtros en móvil ocupan el ancho cómodo para el dedo */
+    .app-content form .btn,
+    .app-content .d-flex > .btn {
+        min-height: 38px;
+    }
+
+    /* Gráficos proporcionados en pantalla vertical */
+    .dashboard-chart-wrap {
+        height: 230px !important;
+    }
+
+    .dashboard-chart-wrap--donut {
+        height: 300px !important;
+    }
+
+    /* Login en 1 sola columna */
+    .login-wrapper {
+        flex-direction: column !important;
+        padding: 1rem !important;
+    }
+
+    .login-brand,
+    .login-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    /* En teléfonos pequeños, las tarjetas KPI van 1 por fila */
+    .app-content .row > [class*="col-6"] {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+}
+/* Evitar que la sombra oscura bloquee los clics en celular */
+@media (max-width: 991.98px) {
+    #sidebar {
+        position: fixed !important;
+        z-index: 9999 !important;
+    }
+    .sidebar-overlay {
+        z-index: 9990 !important;
+        pointer-events: none !important;
+    }
+}
+
